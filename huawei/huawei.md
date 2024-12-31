@@ -202,3 +202,50 @@ plot(mydat[,2],col=cols[mydat[,1]])
 
 一阶差分方差看起来也不明显啊
 
+#### 由磁通密度曲线分布及形状特征构造不同波形的分类指标里面的数据完成判别过程。
+
+#### （1）距离判别
+
+#### （2）Bayes判别
+
+##### 协方差阵相等
+
+``` R
+colnames(dat)=c('t','freq','loss','waveform',paste0('x',1:1024),'g')
+
+formula_str <- paste("waveform ~ ", paste(paste0("x", 1:1024), collapse = " + "))
+formula_obj <- as.formula(formula_str)
+ld=lda(formula_obj,prior=c(1,1,1)/3,dat)
+Proportion of trace:
+   LD1    LD2 
+0.6513 0.3487 
+Z=predict(ld)
+newg=Z$class
+table(g=dat$waveform,newg)
+        newg
+g        三角波 梯形波 正弦波
+  三角波   4577      1    370
+  梯形波      1   2909    488
+  正弦波     81     28   3945
+```
+
+看来在预测三角波跟梯形波比较准确
+
+##### 协方差阵不相等
+
+``` r
+qd=qda(formula_obj,prior=c(1,1,1)/3,dat)
+Z1=predict(qd)
+newg1=Z1$class
+table(g=dat$waveform,newg1)
+        newg1
+g        三角波 梯形波 正弦波
+  三角波   4948      0      0
+  梯形波      0   3398      0
+  正弦波      0      0   4054
+
+```
+
+怎么感觉过拟合了，不管了我吃饭去了
+
+#### （3）Fisher判别

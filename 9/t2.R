@@ -11,3 +11,43 @@ g=factor(g)
 library(MASS)
 pd=qda(g~x1+x2+x3+x4)
 table(g,predict(pd)$class)
+
+
+#输入dat的前面几列为数据，最后一列为因子g
+func1=function(dat,type)
+{	
+	mx=matrix(rep(0,each=length(dat)-1,time=type),nrow=length(dat)-1)
+	s=0
+	tab1=table(dat$g)
+	for(i in 1:type){
+	mx[,i]=apply(dat[dat$g==i,1:length(dat)-1],2,mean)
+	s=s+tab[i]*
+}
+}
+attach(dat)
+ld=lda(g~x1+x2+x3+x4,prior=c(1,1,1)/3)
+table(g,predict(ld)$class)
+Z=predict(ld)
+cbind(g,round(Z$posterior,3),Z$class) #看分类细节
+table(g,Z$class)  #混淆矩阵
+prop.table(table(g,Z$class),1)  #正确率
+
+pd=qda(g~x1+x2+x3+x4,prior=c(1,1,1)/3)
+Z=predict(pd)
+cbind(g,round(Z$posterior,3),Z$class) #看分类细节
+table(g,Z$class)  #混淆矩阵
+prop.table(table(g,Z$class),1)  #正确率
+
+n=dim(dat)[1]
+k=3
+ld=lda(g~x1+x2+x3+x4,dat)
+ev=ld$svd^2*(k-1)/(n-k)
+round(ev,3)
+prop=ev/sum(ev)
+round(prop,4)
+round(cumsum(prop),4)
+round(ld$scalling,3)
+Z=predict(ld)
+round(Z$x,3)
+plot(Z$x,cex=0)
+text(Z$x[,1],Z$x[,2],cex=0.7,g)

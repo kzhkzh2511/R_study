@@ -60,15 +60,92 @@ plot(dat)
 
 #### 距离判别
 
-```R
-library(MASS)
-pd=qda(g~x1+x2+x3+x4)
-table(g,predict(pd)$class)
+##### 因为欧氏距离未能将变量的相关性考虑进去，所以通常用马氏距离
 
+``` R
+
+#输入dat的前面几列为数据，最后一列为因子g
+func1=function(dat,type)
+{	
+	mx=matrix(rep(0,each=length(dat)-1,time=type),nrow=length(dat)-1)
+	s=0
+	tab1=table(dat$g)
+	for(i in 1:type){
+	mx[,i]=apply(dat[dat$g==i,1:length(dat)-1],2,mean)
+	s=s+tab[i]*
+}
+}
+```
+
+还没想好，后面再看看
+
+#### 贝叶斯判别
+
+##### 协方差阵相等的Bayes判别
+
+``` R
+library(MASS)
+attach(dat)
+ld=lda(g~x1+x2+x3+x4,prior=c(1,1,1)/3)
+table(g,predict(ld)$class)
 g    1  2  3
   1 50  0  0
   2  0 48  2
   3  0  1 49
-
+Z=predict(ld1)
+cbind(my.iris$g,round(Z$posterior,3),Z$class) #看分类细节
+table(my.iris$g,Z$class)  #混淆矩阵
+prop.table(table(my.iris$g,Z$class),1)  #正确率
+g      1    2    3
+  1 1.00 0.00 0.00
+  2 0.00 0.96 0.04
+  3 0.00 0.02 0.98
 ```
 
+##### 协方差阵不相等的Bayes判别
+
+``` R
+pd=qda(g~x1+x2+x3+x4,prior=c(1,1,1)/3)
+Z=predict(pd)
+cbind(g,round(Z$posterior,3),Z$class) #看分类细节
+table(g,Z$class)  #混淆矩阵
+------
+g    1  2  3
+  1 50  0  0
+  2  0 48  2
+  3  0  1 49
+prop.table(table(g,Z$class),1)  #正确率
+-----
+g      1    2    3
+  1 1.00 0.00 0.00
+  2 0.00 0.96 0.04
+  3 0.00 0.02 0.98
+```
+
+加入要用交叉检验法，得这样做
+
+``` R
+ld3=qda(g~x1+x2+x3+x4,data=my.iris,prior=c(1,1,1)/3,CV=TRUE)
+```
+
+#### Fisher判别法
+
+``` R
+n=dim(dat)[1]
+k=3
+ld=lda(g~x1+x2+x3+x4,dat)
+ev=ld$svd^2*(k-1)/(n-k)
+round(ev,3)
+prop=ev/sum(ev)
+round(prop,4)
+round(cumsum(prop),4)
+round(ld$scalling,3)
+Z=predict(ld)
+round(Z$x,3)
+plot(Z$x,cex=0)
+text(Z$x[,1],Z$x[,2],cex=0.7,g)
+```
+
+
+
+![image-20241231125800346](2.png)
