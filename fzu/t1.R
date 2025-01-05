@@ -47,3 +47,19 @@ mean(x)
 var(x)
 max(-x)
 max(1/3*x)
+#3
+x=rexp(100000,0.1)
+r=c()
+for(i in 1:10000)
+{	x1=sample(x,100)
+	r=c(r,median(x1))
+}
+median(x)
+r=sort(r)
+result=cbind(r[250],r[9750])
+mean(result)
+
+#5
+x=rnorm(100);y=rnorm(100,10,1)
+summary(x)
+summary((y-10)/1)
