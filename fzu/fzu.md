@@ -161,9 +161,33 @@ result=cbind(r[250],r[9750])
 > summary((y-10)/1)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 -3.30145 -0.75321 -0.07436 -0.09766  0.48866  2.51844 
+
 ```
 
+**t检验**
+
+``` R
+x1=y-10
+m=matrix(c(x,x1),nrow=100)
+t.test(x,x1)
+
+        Welch Two Sample t-test
+
+data:  x and x1
+t = -0.30265, df = 195, p-value = 0.7625
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.3273849  0.2402745
+sample estimates:
+  mean of x   mean of y 
+-0.05705544 -0.01350026 
+```
+
+方差大于0.05，说明不存在显著差异，构造t统计量
+
 无需多言，显而易见可以看出来$\frac {y-10}{1} \sim N(0,1)$
+
+[使用R语言进行卡方检验（chi-square test） - 知乎](https://zhuanlan.zhihu.com/p/42803826)
 
 ![image-20250105230339425](./image-20250105230339425.png)
 
@@ -172,3 +196,32 @@ result=cbind(r[250],r[9750])
 ![image-20250105230539255](./image-20250105230539255.png)
 
 这个参考[这个](./../11/方差分析与正交试验.md)
+
+[最简单的正交试验教程，一次搞定它！ - 知乎](https://zhuanlan.zhihu.com/p/157883678)
+
+![image-20250108004656245](./image-20250108004656245.png)
+
+[正交试验设计及分析（多实现途径） - 知乎](https://zhuanlan.zhihu.com/p/294820345)
+
+里面有方差分析
+
+$总体\sim F(x,\theta),X_1,X_2,...,X_n为其样本，EX=\theta,DX=2\theta,则\frac{\sqrt n (\overline X -\theta)}{S}\sim ?,得到该结论的依据是？若使用a\overline X+bS^2作为\theta 的无偏估计，应满足？$
+
+$总体X\sim N(100,0.5^2),Y\sim E(1)相互独立，分别取1000个样本，则2000(2(\overline X -10)^2+\overline Y)\sim ?$
+
+总体$X\sim F(x,\theta),x_1,x_2,...,x_n为其样本，已知\theta^2=DX，请给出\theta ^2$的估计及均方误差的表示，并给出估计该均方误差的简要思路和估计值
+
+总体$X\sim f(x,u,\theta)=\frac{1}{2\sigma} e^{- \frac{|x-u|}{\sigma}},u\in R,\sigma>0,x_1,x_2,...,x_n为其样本，$求u和$\sigma$的最大似然估计量及估计值
+
+某产品的产量取决于A，B，C三个因素以及可能存在的两两交互的作用。为简化分析过程每个因素取两个水平，依次试验结果为（65,73,73,75,70,74,60,71）
+
+|       | A    | B    | C    |
+| ----- | ---- | ---- | ---- |
+| 水平1 | 60   | 1.2  | 20%  |
+| 水平2 | 80   | 1.5  | 30%  |
+
+给出提升产品产量的最佳方案
+
+总体X的样本为X1,X2,...,Xn，有人觉得总体的中位数为M0=0，怎么构建统计量及其分布
+
+对于两个连续的总体X，Y，观测配对样本$(x_i,y_i)^2_{i=1}$，应如何处理预数据，然后选择什么方法来分析两个总体的独立性，给出解决问题的基本思路和结论
